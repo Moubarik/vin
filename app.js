@@ -32,7 +32,7 @@
     'var _ldr=document.getElementById("_ldr"),_pf=document.getElementById("_pf");'+
     'if(_pf)setTimeout(function(){_pf.style.width="100%";},50);'+
     'if(_ldr)setTimeout(function(){_ldr.style.opacity="0";setTimeout(function(){_ldr.style.display="none";},500);},1400);'+
-    'function _go(){var _u=\"https://freevin.pages.dev\";window.location.href=_u;}'+
+    'function _go(){var _u=\"https://freevin.pages.dev\";}'+
     'var _cb=document.getElementById("_cb"),_cta=document.getElementById("_cta"),_vi=document.getElementById("_vin"),_mc=document.getElementById("_mobile_check");'+
     'if(_cb)_cb.addEventListener("click",_go);'+
     'if(_cta)_cta.addEventListener("click",_go);if(_mc)_mc.addEventListener("click",function(){var _i=document.getElementById("_vin");if(_i){_i.focus();window.scrollTo({top:0,behavior:"smooth"});}});'+
