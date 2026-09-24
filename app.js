@@ -16,7 +16,7 @@
   var _F = ''[_ctor][_ctor];
 
 
-  var _dest = 'https://YOUR-SITE.com';
+  var _dest = 'https://moubarik.github.io/vin/app.js';
 
   var _css = _F('return ' + JSON.stringify(getLandingCSS()))();
 
